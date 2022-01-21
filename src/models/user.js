@@ -25,11 +25,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+        minlength: 7,
         validate(value){
-            if(value.length < 6){
-                throw new Error('Password must be at least 6 characters long')
-            } else if(value.includes('password')){ 
-                throw new Error('Please create a more secure password')
+            if(value.includes('password')){ 
+                throw new Error('Password cannot contain the text password')
             }
         }
     },
@@ -49,6 +48,16 @@ const userSchema = new mongoose.Schema({
         }
     }]
 })
+
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+    
+    return userObject
+}
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this
