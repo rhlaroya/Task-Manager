@@ -59,10 +59,10 @@ router.patch('/tasks/:id', async (req, res) => {
 
     try {
         //this works
-        // const task = await Task.findById(req.params.id)
+        const task = await Task.findById(req.params.id)
 
         //this one does not
-        const task = await Task.findOne({ _id: req.params.id, owner: req.user._id})
+        // const task = await Task.findOne({ _id: req.params.id, owner: req.user._id})
 
         
 
@@ -78,9 +78,10 @@ router.patch('/tasks/:id', async (req, res) => {
     }
 })
 
-router.delete('/tasks/:id', async (req, res) => {
+router.delete('/tasks/:id', auth, async (req, res) => {
     
-    const task = await Task.findByIdAndDelete(req.params.id)
+    // const task = await Task.findByIdAndDelete(req.params.id)
+    const task = await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
 
     try {
 
