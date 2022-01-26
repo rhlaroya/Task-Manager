@@ -6,19 +6,34 @@ const taskRouter = require('./routers/task')
 const app = express()
 const port = process.env.PORT || 3000
 
-// app.use((req, res, next) => {
-//     if(req.method === 'GET') {
-//         res.send('GET requests are disabled')
-//     } else {
-//         next()
-//     }
-// })
+const multer = require('multer')
+const upload = multer({
+    dest: 'images', 
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        //.endsWith
+        if(!file.originalname.match(/\.(doc|docx)$/)) {
+            return cb(new Error('Please upload pdf'))
+        }
 
-// app.use((req, res, next) => {
-//     res.status(503).send('Site is currently down try back soon')
-// })
+        cb(undefined, true)
 
-//503 under m t b s
+        // cb(new Error('File must be a PDF'))
+        // cb(undefined, true)
+        // cb(undefined, false)
+    }
+})
+
+const errorMiddleware = (req, res, next) => {
+    throw new Error('From my middleware')
+}
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({error: error.message})
+})
 
 app.use(express.json())
 app.use(userRouter)
@@ -32,13 +47,7 @@ const Task = require('./models/task')
 const User = require('./models/user')
 
 const main = async () => {
-    // const task = await Task.findById('61ea1597ebf255649c40f546')
-    // await task.populate('owner').execPopulate()
-    // console.log(task.owner)
-
-    // const user = await User.findById('61ea1581ebf255649c40f541')
-    // await user.populate('tasks').execPopulate()
-    // console.log(user.tasks)
+    
 }
 
 main()
