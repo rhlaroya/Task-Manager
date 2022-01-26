@@ -4,6 +4,7 @@
     "dev": "nodemon src/index.js"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "bcrypt": "^5.0.1",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.4.0",
